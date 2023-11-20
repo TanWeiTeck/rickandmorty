@@ -1,54 +1,49 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import MainLayout from './layouts/MainLayout';
-import Contacts from './pages/Contacts';
-import ErrorPage from './pages/ErrorPage';
-import CharacterContextProvider from './Contexts/contactContextProvider';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import Character from './pages/Contacts/Character';
-import { StrictMode } from 'react';
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import MainLayout from "./layouts/MainLayout";
+import Contacts from "./pages/Contacts";
+import CharacterBoard from "./pages/Contacts/ContactBoard/CharacterBoard";
+import ErrorPage from "./pages/ErrorPage";
 
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            keepPreviousData: true,
-            refetchOnWindowFocus: false,
-            staleTime: Infinity,
-        },
+  defaultOptions: {
+    queries: {
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+      staleTime: 300000, // 5 minutes,
     },
+  },
 });
 
 function App() {
-    const router = createBrowserRouter([
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <MainLayout />,
+      errorElement: <ErrorPage />,
+      children: [
         {
-            path: '/',
-            element: <MainLayout />,
-            errorElement: <ErrorPage />,
-            children: [
-                {
-                    path: 'contacts',
-                    element: <Contacts />,
-                    children: [
-                        {
-                            path: ':id',
-                            element: <Character />,
-                        },
-                    ],
-                },
-            ],
+          path: "contacts",
+          element: <Contacts />,
+          children: [
+            {
+              path: ":id",
+              element: <CharacterBoard />,
+            },
+          ],
         },
-    ]);
+      ],
+    },
+  ]);
 
-    return (
-        <div className="App">
-            {/* <StrictMode> */}
-            <QueryClientProvider client={queryClient}>
-                <CharacterContextProvider>
-                    <RouterProvider router={router} />
-                </CharacterContextProvider>
-            </QueryClientProvider>
-            {/* </StrictMode> */}
-        </div>
-    );
+  return (
+    <div className="App">
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </div>
+  );
 }
 
 export default App;
