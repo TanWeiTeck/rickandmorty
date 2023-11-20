@@ -26,6 +26,6 @@ export const fetchCharacter = (params: {
 
 export const fetchEpisode = (params: { episodes: string[] }) => {
     return Server.axiosInstance.get(
-        `Episode${params.episodes ? `/${params.episodes.join(',')}` : ''}`
+        `episode${params.episodes ? `/${params.episodes.join(',')}` : ''}`
     );
 };

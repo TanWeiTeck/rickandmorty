@@ -5,6 +5,7 @@ import ErrorPage from './pages/ErrorPage';
 import CharacterContextProvider from './Contexts/contactContextProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Character from './pages/Contacts/Character';
+import { StrictMode } from 'react';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -39,11 +40,13 @@ function App() {
 
     return (
         <div className="App">
+            {/* <StrictMode> */}
             <QueryClientProvider client={queryClient}>
                 <CharacterContextProvider>
                     <RouterProvider router={router} />
                 </CharacterContextProvider>
             </QueryClientProvider>
+            {/* </StrictMode> */}
         </div>
     );
 }

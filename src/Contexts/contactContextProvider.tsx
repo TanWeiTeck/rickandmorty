@@ -6,7 +6,7 @@ import {
     useContext,
     useState,
 } from 'react';
-import { Character } from '../types';
+import { Character, Episode } from '../types';
 import { fetchCharacter, fetchEpisode } from '../services/api';
 import {
     FetchNextPageOptions,
@@ -36,7 +36,7 @@ interface IContactContext {
     isFetchingNextPage: boolean;
     isFetched: boolean;
     character?: Character;
-    episode?: any;
+    episodes?: Episode[];
 }
 
 const CharacterContext = createContext<IContactContext | null>(null);
@@ -46,7 +46,7 @@ const CharacterContextProvider = ({ children }: PropsWithChildren) => {
     const [characterGender, setCharacterGender] = useState('');
     const [characterStatus, setCharacterStatus] = useState('');
     const [selectedCharacterId, setSelectedCharacterId] = useState('');
-    const [episode, setEpisode] = useState<string[]>([]);
+    const [episodes, setEpisodes] = useState<string[]>([]);
     const {
         data,
         hasNextPage,
@@ -81,16 +81,16 @@ const CharacterContextProvider = ({ children }: PropsWithChildren) => {
                 const episodeList = data.episode.map((episode) =>
                     episode.split('/').pop()
                 ) as string[];
-                setEpisode(episodeList);
+                setEpisodes(episodeList);
             },
             enabled: !!selectedCharacterId,
         }
     );
 
-    const { data: episodeResponse } = useQuery(
-        ['episode', episode],
-        () => fetchEpisode({ episodes: episode }),
-        { enabled: episode.length > 0 }
+    const { data: episodeResponse } = useQuery<AxiosResponse<Episode[]>>(
+        ['episode', episodes],
+        () => fetchEpisode({ episodes: episodes }),
+        { enabled: episodes.length > 0 }
     );
     return (
         <CharacterContext.Provider
@@ -106,7 +106,7 @@ const CharacterContextProvider = ({ children }: PropsWithChildren) => {
                 isFetched,
                 setSelectedCharacterId,
                 character: character?.data,
-                episode: episodeResponse?.data,
+                episodes: episodeResponse?.data,
             }}
         >
             {children}

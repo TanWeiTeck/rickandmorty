@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import Toolbar from './Toolbar';
 import { useCharacterContextProvider } from '../../Contexts/contactContextProvider';
 import { useInView } from 'react-intersection-observer';
-import CharacterCard from '../../components/CharacterCard';
+import ContactCard from '../../components/ContactCard';
 
 const ContactList = () => {
+    // console.log('mount');
     const {
         contactList,
         fetchNextPage,
@@ -13,13 +14,16 @@ const ContactList = () => {
         isFetchingNextPage,
         isFetched,
     } = useCharacterContextProvider();
-    const { ref, inView } = useInView();
 
-    useEffect(() => {
-        if (inView && hasNextPage && !isLoading) {
-            fetchNextPage();
-        }
-    }, [inView, fetchNextPage, hasNextPage, isLoading]);
+    const { ref, inView } = useInView({ rootMargin: '0px 0px 300px 0px' });
+
+    if (inView && hasNextPage && !isLoading) {
+        fetchNextPage();
+    }
+    // useEffect(() => {
+    //     console.log('inView', inView);
+    // }, [inView, fetchNextPage, hasNextPage, isLoading]);
+
     return (
         <div className="tw-flex tw-flex-col tw-gap-2 tw-h-full tw-max-w-xs">
             <div className="tw-p-3 tw-text-center tw-font-bold">Contact</div>
@@ -37,7 +41,7 @@ const ContactList = () => {
                             return (
                                 <div key={`${page}-${index}`}>
                                     {page.data.results.map((result, index) => (
-                                        <CharacterCard
+                                        <ContactCard
                                             data={result}
                                             key={`${result.id}${index}`}
                                         />

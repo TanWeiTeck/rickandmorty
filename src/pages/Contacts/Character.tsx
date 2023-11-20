@@ -3,14 +3,15 @@ import { useParams } from 'react-router-dom';
 import { useCharacterContextProvider } from '../../Contexts/contactContextProvider';
 
 const Character = () => {
-    const { setSelectedCharacterId, character } = useCharacterContextProvider();
+    const { setSelectedCharacterId, character, episodes } =
+        useCharacterContextProvider();
     const { id } = useParams();
     useEffect(() => {
         if (id) setSelectedCharacterId(id);
     }, [id, setSelectedCharacterId]);
 
     const { image, name, episode } = character || {};
-    console.log('episode', episode);
+
     return (
         <>
             <div>
@@ -29,18 +30,24 @@ const Character = () => {
                 </div>
                 <table>
                     <thead>
-                        <td>Name</td>
-                        <td>Air Date</td>
-                        <td>Episode</td>
-                        <td>Created Date</td>
+                        <tr>
+                            <th>Name</th>
+                            <th>Air Date</th>
+                            <th>Episode</th>
+                            <th>Created Date</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                        </tr>
+                        {episodes?.map((episode) => (
+                            <tr>
+                                <td>{episode.name}</td>
+                                <td>{episode.air_date}</td>
+                                <td>{episode.episode}</td>
+                                <td>
+                                    {new Date(episode.created).toLocaleString()}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
