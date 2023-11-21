@@ -62,7 +62,7 @@ const CharacterContextProvider = ({ children }: PropsWithChildren) => {
         return nextPage;
       },
       onError: error => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching contact:", error);
       },
     }
   );
@@ -76,7 +76,7 @@ const CharacterContextProvider = ({ children }: PropsWithChildren) => {
   );
 
   const { data: episodeResponse, isFetching: isFetchingEpisodes } = useQuery<AxiosResponse<Episode[] | Episode>>(
-    ["episode", episodes, selectedCharacterId],
+    ["episode", episodes],
     () => fetchEpisode({ episodes: episodes }),
     {
       enabled: episodes?.length > 0,
